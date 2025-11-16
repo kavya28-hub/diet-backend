@@ -3,29 +3,26 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const apiRoutes = require("./routes/api");
-const authRoutes = require("./routes/auth");  // ⭐ ADD THIS LINE ⭐
-
 const app = express();
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/diet_reco_db";
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+// MongoDB Connect
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB connection error:", err.message));
+  .catch(err => console.error("MongoDB error:", err.message));
 
-// API routes for diet system
-app.use("/api", apiRoutes);
+// AUTH routes
+app.use("/auth", require("./routes/auth"));
 
-// ⭐ ADD THIS ROUTE FOR LOGIN/SIGNUP ⭐
-app.use("/auth", authRoutes);
+// Diet Recommendation API
+app.use("/api", require("./routes/api"));
 
-// Health check
-app.get("/", (req, res) => res.send({ ok: true, now: new Date() }));
+app.get("/", (req, res) => res.send({ ok: true }));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log("Server running on", PORT));
+
+
 
 
