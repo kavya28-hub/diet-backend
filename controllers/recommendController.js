@@ -2,10 +2,6 @@ require("dotenv").config();
 const UserProfile = require("../models/UserProfile");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
 // BMI Calculator
 function calculateBMI(heightCm, weightKg) {
   const heightM = heightCm / 100;
@@ -33,7 +29,7 @@ User Details:
 - Goal: ${goal}
 - Food Preference: ${foodPreference}
 
-Return formatted structured output using HTML tags:
+Return structured output using HTML tags:
 SUMMARY:
 MEAL PLAN (Breakfast, Lunch, Dinner, Snacks with calories):
 HYDRATION:
@@ -41,7 +37,12 @@ WORKOUT TIP:
 `;
 
     let aiText = "";
+
     try {
+      // Initialize Gemini **inside the function**
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
       const result = await model.generateContent(prompt);
       aiText = result.response.text();
     } catch (err) {
@@ -49,6 +50,7 @@ WORKOUT TIP:
       aiText = "<p>AI unavailable. Please try again later.</p>";
     }
 
+    // Save to MongoDB
     const profile = new UserProfile({
       heightCm,
       weightKg,
@@ -81,5 +83,6 @@ WORKOUT TIP:
 }
 
 module.exports = { recommendHandler };
+
 
 
