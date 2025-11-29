@@ -22,7 +22,6 @@ async function recommendHandler(req, res) {
 
     const bmi = calculateBMI(heightCm, weightKg);
 
-    // AI Prompt
     const prompt = `
 Generate a complete personalized diet plan.
 
@@ -34,11 +33,11 @@ User Details:
 - Goal: ${goal}
 - Food Preference: ${foodPreference}
 
-Return the result formatted with HTML:
+Return formatted structured output using HTML tags:
 SUMMARY:
-MEAL PLAN:
+MEAL PLAN (Breakfast, Lunch, Dinner, Snacks with calories):
 HYDRATION:
-WORKOUT:
+WORKOUT TIP:
 `;
 
     let aiText = "";
@@ -46,7 +45,7 @@ WORKOUT:
       const result = await model.generateContent(prompt);
       aiText = result.response.text();
     } catch (err) {
-      console.log("Gemini AI failed:", err.message);
+      console.log("Gemini Error:", err.message);
       aiText = "<p>AI unavailable. Please try again later.</p>";
     }
 
