@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   res.json({ message: "API working!" });
 });
 
-// Main route used by frontend
+// Diet recommendation route
 router.post("/recommend", recommendHandler);
 
 module.exports = router;
