@@ -8,10 +8,9 @@ const UserProfileSchema = new mongoose.Schema({
   foodPreference: String,
   bmi: Number,
   recommendation: {
-    summary: String,     // BMI summary
-    mealsHtml: String,   // Meals with images
-    aiSummary: String,   // <-- AI diet guidance
-    createdAt: { type: Date, default: Date.now }
+    summary: String,
+    mealsHtml: String,
+    aiSummary: String
   }
 });
 
